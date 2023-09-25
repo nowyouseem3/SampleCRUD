@@ -39,4 +39,9 @@ class userController {
         return query.executeQuery()
     }
 
+    fun userUpdate(fullname: String, userAddress: String, userName: String, userPassword: String, userID: Int) : ResultSet? {
+        val query = DBConfig().connect().prepareStatement("UPDATE users SET fullname='$fullname', username='$userName', password='$userPassword', address='$userAddress' WHERE id='$userID'")
+        return query.executeQuery()
+    }
+
 }

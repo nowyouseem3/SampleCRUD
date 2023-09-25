@@ -14,12 +14,15 @@ data class getUsers(
 )
 
 @Serializable
-data class validateUsers(
+data class postUsers(
     var fullName : String,
+    var userName : String,
+    var password : String,
+    var address : String
 )
 
 @Serializable
-data class postUsers(
+data class putUsers(
     var fullName : String,
     var userName : String,
     var password : String,

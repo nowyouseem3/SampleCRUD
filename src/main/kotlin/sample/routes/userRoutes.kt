@@ -7,7 +7,8 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import sample.models.*
 import sample.controllers.userController
-import sample.postValidation.*
+import sample.validation.postValidation.userNameValidation
+import sample.validation.putValidation.userPutNameValidation
 
 fun Route.userRouting(){
     route("/user"){
@@ -27,13 +28,12 @@ fun Route.userRouting(){
             val user = call.receive<postUsers>()
             val (fullname,username,password,address) = user
 
-//            call.respond(userNameValidation(username))
             if (userNameValidation(username)){
                 call.respondText("User has been added.", status = HttpStatusCode.Created)
                 userController().createUser(fullname, address, username, password)
             }
             else{
-                call.respondText(" $username Is Not Valid or Available", status = HttpStatusCode.BadRequest)
+                call.respondText(" $username Is Not Valid or Available", status = HttpStatusCode.NotAcceptable)
             }
 
         }
@@ -46,6 +46,27 @@ fun Route.userRouting(){
                 userController().userDelete(id)
             } else {
                 call.respondText(" $id Id Not Found", status = HttpStatusCode.NotFound)
+            }
+        }
+
+        put("{id?}"){
+            val user = call.receive<putUsers>()
+            //destructure user
+            val (fullname,userName,password,address) = user
+
+            val declareId = call.parameters["id"]?: return@put call.respond(HttpStatusCode.BadRequest)
+            val userStorage = userController().getUserData()
+            if (userStorage.removeIf { it.id == declareId.toInt() }) {
+                if (userPutNameValidation(userName, declareId.toInt())){
+                    call.respondText(" $declareId was updated correctly", status = HttpStatusCode.Accepted)
+                    userController().userUpdate( "$fullname", "$address ", "$userName","$password", declareId.toInt() )
+                }
+                else{
+                    call.respondText(" $userName Is Not Valid or Available", status = HttpStatusCode.OK)
+                }
+
+            } else {
+                call.respondText(" $declareId Id Not Found", status = HttpStatusCode.NotFound)
             }
         }
 
