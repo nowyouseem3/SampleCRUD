@@ -10,20 +10,17 @@ fun Route.fileRouting(){
     route("/file"){
         get (){
             val file = File("files/Junsay CV.jpg")
-
             call.response.header(
                 HttpHeaders.ContentDisposition,
                 ContentDisposition.Inline.withParameter(
                     ContentDisposition.Parameters.FileName, "downloadableCV.jpg"
                 ).toString()
             )
-
             call.respondFile(file)
         }
         route("/download"){
             get (){
                 val file = File("files/Junsay CV.jpg")
-
                 call.response.header(
                     HttpHeaders.ContentDisposition,
                     ContentDisposition.Attachment.withParameter(

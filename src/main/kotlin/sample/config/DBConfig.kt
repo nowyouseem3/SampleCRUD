@@ -13,6 +13,5 @@ class DBConfig {
 
         return DriverManager.getConnection(url,username,password)
 
-
     }
 }

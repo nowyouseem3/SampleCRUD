@@ -4,12 +4,14 @@ import sample.models.*
 import sample.config.DBConfig
 import sample.models.getUsers
 import java.sql.ResultSet
+import sample.Queries.*
 
 class userController {
 
     fun getUserData(): MutableList<getUsers>{
         val data = mutableListOf<getUsers>()
-        val query = DBConfig().connect().prepareStatement("SELECT * FROM users")
+        val query = DBConfig().connect().prepareStatement(readUserQuery)
+        print("----------------------------------$query")
         val result = query.executeQuery()
         while (result.next()) {
             // getting the value of the id column
@@ -28,20 +30,29 @@ class userController {
     }
 
     fun createUser (fullName: String, userAddress: String, userName: String, userPassword: String ) :ResultSet? {
-        val query = DBConfig().connect().prepareStatement("INSERT INTO users(fullname, username, password, address) VALUES ('$fullName','$userName','$userPassword','$userAddress')")
+        val query = DBConfig().connect().prepareStatement(createUserQuery)
+        query.setString(1,fullName)
+        query.setString(2, userName)
+        query.setString(3, userPassword)
+        query.setString(4, userPassword)
         return query.executeQuery()
 
     }
 
-    fun userDelete(id: String): ResultSet? {
-        val query = DBConfig().connect().prepareStatement("DELETE FROM users WHERE id=$id")
+    fun userDelete(id: Int): ResultSet? {
+        val query = DBConfig().connect().prepareStatement(deleteUserQuery)
+        query.setInt(1, id)
         // the query is executed and results are fetched
         return query.executeQuery()
     }
 
     fun userUpdate(fullname: String, userAddress: String, userName: String, userPassword: String, userID: Int) : ResultSet? {
-        val query = DBConfig().connect().prepareStatement("UPDATE users SET fullname='$fullname', username='$userName', password='$userPassword', address='$userAddress' WHERE id='$userID'")
+        val query = DBConfig().connect().prepareStatement(updateUserQuery)
+        query.setString(1, fullname)
+        query.setString(2, userName)
+        query.setString(3, userPassword)
+        query.setString(4, userAddress)
+        query.setInt(5, userID)
         return query.executeQuery()
     }
-
 }

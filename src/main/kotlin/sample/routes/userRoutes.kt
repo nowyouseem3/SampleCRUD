@@ -7,8 +7,8 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import sample.models.*
 import sample.controllers.userController
-import sample.validation.postValidation.userNameValidation
-import sample.validation.putValidation.userPutNameValidation
+import sample.validation.userValidation
+import sample.validation.userPutNameValidation
 
 fun Route.userRouting(){
     route("/user"){
@@ -18,8 +18,8 @@ fun Route.userRouting(){
         }
         get("{id?}") {
             val userStorage = userController().getUserData()
-            val id = call.parameters["id"] ?: return@get call.respondText("Missing ID!", status = HttpStatusCode.BadRequest)
-            val user = userStorage.find { it.id == id.toInt() } ?: call.respondText("No User ID found!", status = HttpStatusCode.NotFound)
+            val id = call.parameters["id"] ?: return@get call.respond(textResponse("Bad Request", 400))
+            val user = userStorage.find { it.id == id.toInt() } ?: call.respond(textResponse("Not Found", 404))
 
             call.respond(user)
         }
@@ -28,24 +28,24 @@ fun Route.userRouting(){
             val user = call.receive<postUsers>()
             val (fullname,username,password,address) = user
 
-            if (userNameValidation(username)){
-                call.respondText("User has been added.", status = HttpStatusCode.Created)
+            if (userValidation(username,fullname,password)){
+                call.respond(textResponse("Created", 201))
                 userController().createUser(fullname, address, username, password)
             }
             else{
-                call.respondText(" $username Is Not Valid or Available", status = HttpStatusCode.NotAcceptable)
+                call.respond(textResponse("Not Acceptable", 406))
             }
 
         }
 
         delete("{id?}") {
             val userStorage = userController().getUserData()
-            val id = call.parameters["id"] ?: return@delete call.respond(HttpStatusCode.BadRequest)
+            val id = call.parameters["id"] ?: return@delete call.respond(textResponse("Bad Request", 400))
             if (userStorage.removeIf { it.id == id.toInt() }) {
-                call.respondText(" $id was removed correctly", status = HttpStatusCode.Accepted)
-                userController().userDelete(id)
+                call.respond(textResponse("Accepted", 202))
+                userController().userDelete(id.toInt())
             } else {
-                call.respondText(" $id Id Not Found", status = HttpStatusCode.NotFound)
+                call.respond(textResponse("Not Found", 404))
             }
         }
 
@@ -54,19 +54,19 @@ fun Route.userRouting(){
             //destructure user
             val (fullname,userName,password,address) = user
 
-            val declareId = call.parameters["id"]?: return@put call.respond(HttpStatusCode.BadRequest)
+            val declareId = call.parameters["id"]?: return@put call.respond(textResponse("Bad Request", 400))
             val userStorage = userController().getUserData()
             if (userStorage.removeIf { it.id == declareId.toInt() }) {
                 if (userPutNameValidation(userName, declareId.toInt())){
-                    call.respondText(" $declareId was updated correctly", status = HttpStatusCode.Accepted)
+                    call.respond(textResponse("Accepted", 202))
                     userController().userUpdate( "$fullname", "$address ", "$userName","$password", declareId.toInt() )
                 }
                 else{
-                    call.respondText(" $userName Is Not Valid or Available", status = HttpStatusCode.OK)
+                    call.respond(textResponse("Not Acceptable", 406))
                 }
 
             } else {
-                call.respondText(" $declareId Id Not Found", status = HttpStatusCode.NotFound)
+                call.respond(textResponse("Not Found", 404))
             }
         }
 

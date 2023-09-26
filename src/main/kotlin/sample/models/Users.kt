@@ -28,6 +28,12 @@ data class putUsers(
     var password : String,
     var address : String
 )
+
+@Serializable
+data class textResponse(
+    var text: String = "",
+    var code: Int = 0
+)
 /*
 @Serializable
 var users = mutableListOf<Users>(
