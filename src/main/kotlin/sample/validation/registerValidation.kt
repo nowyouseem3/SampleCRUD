@@ -1,3 +1,5 @@
+@file:Suppress("SENSELESS_COMPARISON")
+
 package sample.validation
 
 import sample.Queries.readUserQuery
@@ -18,7 +20,9 @@ fun userValidation (userName: String, fullName: String, password: String) : Bool
         val username = result.getString("username")
         val fullname = result.getString("fullname")
 
-        if (userName == null || userName == username || fullName == fullname || fullName.length < 3 || password.length < 3) {
+        if (userName == null || fullName == null || password == null ||
+            userName == username || fullName == fullname ||
+            fullName.length < 3 || password.length < 3) {
             return false
         }
     }
@@ -27,9 +31,7 @@ fun userValidation (userName: String, fullName: String, password: String) : Bool
     // to find matching between given username
     // and regular expression.
     val userMatch : Matcher = userPattern.matcher(userName)
-    val fullNameMatch : Matcher = userPattern.matcher(userName)
 
-    val ret : ArrayList<String> = arrayListOf(userName,fullName,password)
     // Return if the username
     // matched the ReGex
     return userMatch.matches()
