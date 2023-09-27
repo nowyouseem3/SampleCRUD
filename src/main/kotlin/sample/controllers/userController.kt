@@ -11,7 +11,6 @@ class userController {
     fun getUserData(): MutableList<getUsers>{
         val data = mutableListOf<getUsers>()
         val query = DBConfig().connect().prepareStatement(readUserQuery)
-        print("----------------------------------$query")
         val result = query.executeQuery()
         while (result.next()) {
             // getting the value of the id column
@@ -26,33 +25,47 @@ class userController {
             val address = result.getString("address")
             data.add(getUsers(id, fullName, username, password, address))
         }
+        // the query is executed and results are fetched
         return data
     }
 
     fun createUser (fullName: String, userAddress: String, userName: String, userPassword: String ) :ResultSet? {
         val query = DBConfig().connect().prepareStatement(createUserQuery)
+        // set fullname from createUser params to createUserQuery
         query.setString(1,fullName)
+        // set username from createUser params to createUserQuery
         query.setString(2, userName)
+        // set password from createUser params to createUserQuery
         query.setString(3, userPassword)
-        query.setString(4, userPassword)
-        return query.executeQuery()
+        // set user address from createUser params to createUserQuery
+        query.setString(4, userAddress)
 
-    }
-
-    fun userDelete(id: Int): ResultSet? {
-        val query = DBConfig().connect().prepareStatement(deleteUserQuery)
-        query.setInt(1, id)
         // the query is executed and results are fetched
         return query.executeQuery()
     }
 
-    fun userUpdate(fullname: String, userAddress: String, userName: String, userPassword: String, userID: Int) : ResultSet? {
+    fun userDelete(id: Int): ResultSet? {
+        val query = DBConfig().connect().prepareStatement(deleteUserQuery)
+        // set id from userDelete params to deleteUserQuery
+        query.setInt(1, id)
+
+        // the query is executed and results are fetched
+        return query.executeQuery()
+    }
+
+    fun userUpdate(fullname: String, userAddress: String, userName: String, userPassword: String, userID: Int) :ResultSet? {
         val query = DBConfig().connect().prepareStatement(updateUserQuery)
+        // set fullname from userUpdate params to updateUserQuery
         query.setString(1, fullname)
+        // set username from userUpdate params to updateUserQuery
         query.setString(2, userName)
+        // set password from userUpdate params to updateUserQuery
         query.setString(3, userPassword)
+        // set address from userUpdate params to updateUserQuery
         query.setString(4, userAddress)
         query.setInt(5, userID)
+
+        // the query is executed and results are fetched
         return query.executeQuery()
     }
 }
