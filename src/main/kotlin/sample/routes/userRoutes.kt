@@ -21,12 +21,22 @@ fun Route.userRouting(){
         get("{id?}") {
             // set and calling the getUserData function to fetch return value
             val userStorage = userController().getUserData()
-            // set and declaring variable with the value from parameters and return error if null
-            val id = call.parameters["id"] ?: return@get call.respond(textResponse("Bad Request", 400))
-            // declaring variable with the value from params and find the id if there's or not
-            val user = userStorage.find { it.id == id.toInt() } ?: call.respond(textResponse("Not Found", 404))
-            //otherwise display json
-            call.respond(user)
+            try {
+                try {
+                    // set and declaring variable with the value from parameters and return error if null
+                    val id = call.parameters["id"]
+                    // declaring variable with the value from params and find the id if there's or not
+                    val user = userStorage.find { it.id == id!!.toInt()} ?: return@get call.respond(textResponse("Not Found", 404))
+                    //otherwise display json
+                    call.respond(user)
+                }
+                catch (e: Exception){
+                    return@get call.respond(textResponse("Bad Request: $e", 400))
+                }
+            }
+            catch (e : Exception){
+                return@get call.respond(textResponse("Server Error: $e", 500))
+            }
         }
 
         post {
@@ -42,7 +52,6 @@ fun Route.userRouting(){
             else{
                 call.respond(textResponse("Not Acceptable", 406))
             }
-
         }
 
         delete("{id?}") {

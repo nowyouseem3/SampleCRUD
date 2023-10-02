@@ -35,4 +35,6 @@ dependencies {
     testImplementation("io.ktor:ktor-server-tests-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
     implementation("io.ktor:ktor-server-request-validation:$ktor_version")
+    implementation(group = "org.mindrot",name = "jbcrypt", version = "0.4")
+    implementation ("io.ktor:ktor-client-cio:$ktor_version")
 }

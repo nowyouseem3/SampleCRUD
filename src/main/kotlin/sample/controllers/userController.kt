@@ -1,13 +1,32 @@
 package sample.controllers
 
+import io.ktor.client.*
+import io.ktor.client.call.*
+import io.ktor.client.engine.cio.*
+import io.ktor.client.request.*
+import io.ktor.http.*
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.internal.decodeStringToJsonTree
 import sample.models.*
 import sample.config.DBConfig
 import sample.models.getUsers
 import java.sql.ResultSet
 import sample.Queries.*
+import sample.validation.passwordHash
+import java.net.http.HttpResponse
 
 class userController {
 
+    suspend fun test() : List<getUsersTest>{
+        val client = HttpClient(CIO)
+
+    val json = Json{ignoreUnknownKeys = true}
+        val response = client.get("https://jsonplaceholder.typicode.com/posts")
+        val userclient = json.decodeFromString<List<getUsersTest>>(response.body())
+        print("-----------------$userclient")
+
+        return userclient
+    }
     fun getUserData(): MutableList<getUsers>{
         val data = mutableListOf<getUsers>()
         val query = DBConfig().connect().prepareStatement(readUserQuery)
@@ -36,12 +55,13 @@ class userController {
         // set username from createUser params to createUserQuery
         query.setString(2, userName)
         // set password from createUser params to createUserQuery
-        query.setString(3, userPassword)
+        query.setString(3, passwordHash(userPassword))
         // set user address from createUser params to createUserQuery
         query.setString(4, userAddress)
 
         // the query is executed and results are fetched
         return query.executeQuery()
+
     }
 
     fun userDelete(id: Int): ResultSet? {
@@ -60,7 +80,7 @@ class userController {
         // set username from userUpdate params to updateUserQuery
         query.setString(2, userName)
         // set password from userUpdate params to updateUserQuery
-        query.setString(3, userPassword)
+        query.setString(3, passwordHash(userPassword))
         // set address from userUpdate params to updateUserQuery
         query.setString(4, userAddress)
         query.setInt(5, userID)

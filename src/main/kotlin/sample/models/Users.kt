@@ -12,6 +12,12 @@ data class getUsers(
     var password : String,
     var address : String
 )
+@Serializable
+data class getUsersTest(
+    var userId: Int,
+    var title: String,
+    var body: String
+)
 
 @Serializable
 data class postUsers(

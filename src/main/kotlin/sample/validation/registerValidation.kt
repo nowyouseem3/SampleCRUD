@@ -2,11 +2,16 @@
 
 package sample.validation
 
+import org.mindrot.jbcrypt.BCrypt
 import sample.Queries.readUserQuery
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 import sample.config.*
 
+fun passwordHash(password: String) :String {
+    // password encryption
+    return BCrypt.hashpw(password, BCrypt.gensalt())
+}
 fun userValidation (userName: String, fullName: String, password: String) : Boolean {
     // regex is declared variable to check if the user data meet the requirements
     val regex = "^[A-Za-z]\\w{3,29}$"
