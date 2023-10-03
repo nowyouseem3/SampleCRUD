@@ -1,12 +1,11 @@
 package sample.validation
 
-
 import sample.Queries.readUserUpdateQuery
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 import sample.config.*
 
-fun userPutNameValidation (userName: String, userID: Int) :Boolean{
+fun userPutNameValidation (userName: String, userID: Int,fullName: String) :Boolean{
     val regex = "^[A-Za-z]\\w{3,29}$"
     val query = DBConfig().connect().prepareStatement(readUserUpdateQuery)
     query.setInt(1, userID)
@@ -18,8 +17,9 @@ fun userPutNameValidation (userName: String, userID: Int) :Boolean{
     // return false
     while (result.next()) {
         val username = result.getString("username")
+        val fullname = result.getString("fullname")
 
-        if (userName == null || userName == username) {
+        if (userName == username || fullName.length < 3 || fullName == fullname) {
             return false
         }
     }

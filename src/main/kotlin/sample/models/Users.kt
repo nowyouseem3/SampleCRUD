@@ -20,6 +20,13 @@ data class getUsersTest(
 )
 
 @Serializable
+data class getUserLogin(
+    //var userId: Int,
+    var username: String,
+    var password: String
+)
+
+@Serializable
 data class postUsers(
     var fullName : String,
     var userName : String,

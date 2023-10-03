@@ -7,6 +7,7 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.internal.decodeStringToJsonTree
+import org.mindrot.jbcrypt.BCrypt
 import sample.models.*
 import sample.config.DBConfig
 import sample.models.getUsers
@@ -20,10 +21,9 @@ class userController {
     suspend fun test() : List<getUsersTest>{
         val client = HttpClient(CIO)
 
-    val json = Json{ignoreUnknownKeys = true}
+        val json = Json{ignoreUnknownKeys = true}
         val response = client.get("https://jsonplaceholder.typicode.com/posts")
         val userclient = json.decodeFromString<List<getUsersTest>>(response.body())
-        print("-----------------$userclient")
 
         return userclient
     }
