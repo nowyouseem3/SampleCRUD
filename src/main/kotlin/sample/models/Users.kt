@@ -7,10 +7,11 @@ import java.beans.Customizer
 @Serializable
 data class getUsers(
     var id : Int,
-    var fullName : String,
-    var userName : String,
-    var password : String,
-    var address : String
+    var userEmail : String,
+    var userPassword : String,
+    var userFullName : String,
+    var userPhone: String,
+    var userAddress : String
 )
 @Serializable
 data class getUsersTest(
@@ -27,10 +28,12 @@ data class getUserLogin(
 )
 
 @Serializable
-data class postUsers(
-    var fullName : String,
-    var userName : String,
+data class PostUsers(
+    var userID: Int,
+    var userEmail : String,
     var password : String,
+    var fullName : String,
+    var phone : String,
     var address : String
 )
 

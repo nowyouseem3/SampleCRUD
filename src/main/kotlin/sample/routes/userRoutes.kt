@@ -1,5 +1,6 @@
 package sample.routes
 
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -17,7 +18,7 @@ fun Route.userRouting(){
                 // set and calling the getUserData function to fetch returned value
                 val userValues = userController().getUserData()
                 // display json
-                call.respond(userValues)
+                call.respond(HttpStatusCode.OK,userValues)
             }
             catch (e : Exception){
                 call.respond(textResponse("DataBase Error: $e", 500))

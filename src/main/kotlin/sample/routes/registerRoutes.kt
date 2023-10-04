@@ -15,22 +15,20 @@ fun Route.registerUserRouting(){
             call.respond("hello register")
         }
         post {
-
+            try {
                 // declaring variable that can get all models from postUsers model
-                val user = call.receive<postUsers>()
+                val user = call.receive<PostUsers>()
                 // declaring destructure with the same parameter position from postUser model
-                val (fullname,username,password,address) = user
+                val (userID, userEmail, password, fullname, phone, address) = user
                 // calling the userValidation to identify if the setting store data are meet the requirements
-                if (userValidation(username,fullname,password)){
-                    call.respond(textResponse("Created", 201))
-                    userController().createUser(fullname, address, username, password)
-                }
-                else{
-                    call.respond(textResponse("Not Acceptable", 406))
-                }
-
-
-
+                if (!userValidation(userEmail,fullname,password)) return@post call.respond(textResponse("Failed", 406))
+                else
+                    userController().createUser(userID, userEmail, password, fullname, phone, address)
+                    call.respond(textResponse("Success", 200))
+            }
+            catch (e: Exception){
+                return@post call.respond(textResponse("Server Error: $e", 500))
+            }
         }
     }
 }

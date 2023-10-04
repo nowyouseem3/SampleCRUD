@@ -33,35 +33,39 @@ class userController {
         val result = query.executeQuery()
         while (result.next()) {
             // getting the value of the id column
-            val id:Int = result.getInt("id")
+            val id:Int = result.getInt("userid")
             // getting the value of the name column
-            val fullName = result.getString("fullname")
+            val useremail = result.getString("useremail")
             // getting the value of the name column
-            val username = result.getString("username")
+            val password = result.getString("userpassword")
             // getting the value of the name column
-            val password = result.getString("password")
+            val fullName = result.getString("userfullname")
             // getting the value of the name column
-            val address = result.getString("address")
-            data.add(getUsers(id, fullName, username, password, address))
+            val phone = result.getString("userphone")
+            // getting the value of the name column
+            val address = result.getString("useraddress")
+            data.add(getUsers(id,useremail,password,fullName,phone,address))
         }
         // the query is executed and results are fetched
         return data
     }
 
-    fun createUser (fullName: String, userAddress: String, userName: String, userPassword: String ) :ResultSet? {
-        val query = DBConfig().connect().prepareStatement(createUserQuery)
-        // set fullname from createUser params to createUserQuery
-        query.setString(1,fullName)
-        // set username from createUser params to createUserQuery
-        query.setString(2, userName)
-        // set password from createUser params to createUserQuery
-        query.setString(3, passwordHash(userPassword))
-        // set user address from createUser params to createUserQuery
-        query.setString(4, userAddress)
+    fun createUser (userId: Int, userEmail: String, userPassword: String, userFullName: String, userPhone: String, userAddress: String ){
+        val accountQuery = DBConfig().connect().prepareStatement(createUserAccountQuery)
+        val credentialQuery = DBConfig().connect().prepareStatement(createUserCredentialQuery)
 
-        // the query is executed and results are fetched
-        return query.executeQuery()
+        // set account query value
+        accountQuery.setInt(1,userId)
+        accountQuery.setString(2,userEmail)
+        accountQuery.setString(3, passwordHash(userPassword))
+        // set credential query value
+        credentialQuery.setInt(1, userId)
+        credentialQuery.setString(2,userFullName)
+        credentialQuery.setString(3, userPhone)
+        credentialQuery.setString(4, userAddress)
 
+        credentialQuery.executeUpdate()
+        accountQuery.executeUpdate()
     }
 
     fun userDelete(id: Int): ResultSet? {

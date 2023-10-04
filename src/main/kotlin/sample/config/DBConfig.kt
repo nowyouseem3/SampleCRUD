@@ -8,11 +8,6 @@ import java.sql.Connection
 
 
 
-
-
-
-
-
 class DBConfig {
     val config = HikariConfig()
     var ds: HikariDataSource? = null
@@ -20,7 +15,7 @@ class DBConfig {
     @Throws(SQLException::class)
     fun connect(): Connection
     {
-        config.setJdbcUrl("jdbc:postgresql://192.168.5.191:6432/postgres")
+        config.setJdbcUrl("jdbc:postgresql://192.168.4.134:6432/postgres")
         config.username = "postgres"
         config.password = "root201"
         config.addDataSourceProperty("cachePrepStmts", "true")

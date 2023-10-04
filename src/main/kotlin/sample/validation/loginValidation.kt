@@ -9,6 +9,6 @@ fun loginValidation(username: String, password: String) : Boolean {
     val userStorage = userController().getUserData()
 
     //validate if username exist and equal to password
-    val sessionUser = userStorage.find { it.userName == username} ?: return true
-    return !BCrypt.checkpw(password, sessionUser.password)
+    val sessionUser = userStorage.find { it.userEmail == username} ?: return true
+    return !BCrypt.checkpw(password, sessionUser.userPassword)
 }

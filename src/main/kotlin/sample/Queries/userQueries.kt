@@ -1,7 +1,7 @@
 package sample.Queries
 
 // query for getting all data from users table
-const val readUserQuery = "SELECT * FROM users"
+const val readUserQuery = "SELECT * FROM user_account, user_credential WHERE user_account.userid = user_credential.userid"
 
 // query for getting data from userlogin
 const val getUserLogin = "SELECT * FROM users WHERE username = ?"
@@ -10,7 +10,8 @@ const val getUserLogin = "SELECT * FROM users WHERE username = ?"
 const val readUserUpdateQuery = "SELECT * FROM users Where id!=?"
 
 // query to store all input data into users table
-const val createUserQuery = "INSERT INTO users (fullname, username, password, address) VALUES (? ,? ,? ,?)"
+const val createUserAccountQuery = "INSERT INTO user_account (userid, useremail, userpassword) VALUES (? ,? ,?)"
+const val createUserCredentialQuery = "INSERT INTO user_credential (userid, userfullname, userphone, useraddress) VALUES (? ,? ,?, ?)"
 
 // query to delete data from users
 const val deleteUserQuery = "DELETE FROM users WHERE id=?"

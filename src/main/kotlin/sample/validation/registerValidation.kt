@@ -12,7 +12,7 @@ fun passwordHash(password: String) :String {
     // password encryption
     return BCrypt.hashpw(password, BCrypt.gensalt())
 }
-fun userValidation (userName: String, fullName: String, password: String) : Boolean {
+fun userValidation (userEmail: String, fullName: String, password: String) : Boolean {
     // regex is declared variable to check if the user data meet the requirements
     val regex = "^[A-Za-z]\\w{3,29}$"
 
@@ -27,12 +27,12 @@ fun userValidation (userName: String, fullName: String, password: String) : Bool
     // return false
     while (result.next()) {
         // username,fullname are declared variable to store the said items in every single loop
-        val username = result.getString("username")
-        val fullname = result.getString("fullname")
+        val useremail = result.getString("useremail")
+        val fullname = result.getString("userfullname")
 
         //validation
-        if (userName == null || fullName == null || password == null ||
-            userName == username || fullName == fullname ||
+        if (userEmail == null || fullName == null || password == null ||
+            userEmail == useremail || fullName == fullname ||
             fullName.length < 3 || password.length < 3) {
 
             return false
@@ -42,7 +42,7 @@ fun userValidation (userName: String, fullName: String, password: String) : Bool
     // Pattern class contains matcher() method
     // to find matching between given username
     // and regular expression.
-    val userMatch : Matcher = userPattern.matcher(userName)
+    val userMatch : Matcher = userPattern.matcher(fullName)
 
     // Return if the username
     // matched the ReGex
