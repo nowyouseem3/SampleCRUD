@@ -49,8 +49,8 @@ fun Route.userRouting(){
                 val id = call.parameters["id"] ?: return@delete call.respond(textResponse("Bad Request", 400))
                 // find if the said id exist and delete otherwise not exist
                 if (userStorage.removeIf { it.id == id.toInt() }) {
-                    call.respond(textResponse("Accepted", 202))
                     userController().userDelete(id.toInt())
+                    call.respond(textResponse("Accepted", 202))
                 } else {
                     call.respond(textResponse("Not Found", 404))
                 }
@@ -66,7 +66,7 @@ fun Route.userRouting(){
                 // declaring variable that can get all models from putUsers model
                 val user = call.receive<putUsers>()
                 //destructure user
-                val (fullname,userName,password,address) = user
+                val (userEmail, password, fullName , phone, address) = user
                 // set and declaring variable with the value from parameters and return error if null
                 val declareId = call.parameters["id"]?: return@put call.respond(textResponse("Bad Request", 400))
                 // set and calling the getUserData function to fetch return value
@@ -74,9 +74,10 @@ fun Route.userRouting(){
                 // check if the id exist
                 if (userStorage.removeIf { it.id == declareId.toInt() }) {
                     //validate if the changes meet the requiements and unique from other
-                    if (userPutNameValidation(userName, declareId.toInt(), fullname)){
+                    if (userPutNameValidation(userEmail, declareId.toInt(), fullName)){
+
+                        userController().userUpdate(userEmail, password, fullName , phone, address, declareId.toInt() )
                         call.respond(textResponse("Accepted", 202))
-                        userController().userUpdate(fullname, address, userName, password, declareId.toInt() )
                     }
                     else {
                         call.respond(textResponse("Not Acceptable", 406))

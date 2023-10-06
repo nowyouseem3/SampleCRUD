@@ -12,6 +12,7 @@ class ApplicationTest {
     fun userTest() = testApplication {
         application {
             configureRouting()
+            configureSecurity()
         }
         val response = client.get("/user/2301")
         val resBody = "{"+

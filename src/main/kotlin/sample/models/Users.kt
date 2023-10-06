@@ -21,28 +21,57 @@ data class getUsersTest(
 )
 
 @Serializable
+data class userDetail(
+    var userId: Int,
+    var FullName: String,
+    var data: MutableList<getUserTestWorkExperience>
+)
+
+@Serializable
+data class getUserTestWorkExperience (
+    val recordId: Int, // Serialize (auto increment)
+    val userId: Int, // FK of userId in userDetail
+    val companyName: String,
+    val jobTitle: String,
+    val companyAddress: String,
+    val yearsOfExperiences: String
+)
+
+@Serializable
+data class insertperson (
+    val fullName: String,
+    val userId: Int, // FK of userId in userDetail
+    val companyName: String,
+    val jobTitle: String,
+    val companyAddress: String,
+    val yearsOfExperiences: String
+)
+
+
+@Serializable
 data class getUserLogin(
     //var userId: Int,
-    var username: String,
-    var password: String
+    var userEmail: String,
+    var userPassword: String
 )
 
 @Serializable
 data class PostUsers(
     var userID: Int,
     var userEmail : String,
-    var password : String,
-    var fullName : String,
-    var phone : String,
-    var address : String
+    var userPassword : String,
+    var userFullName : String,
+    var userPhone : String,
+    var userAddress : String
 )
 
 @Serializable
 data class putUsers(
-    var fullName : String,
-    var userName : String,
-    var password : String,
-    var address : String
+    var userEmail : String,
+    var userPassword : String,
+    var userFullName : String,
+    var userPhone : String,
+    var userAddress : String
 )
 
 @Serializable

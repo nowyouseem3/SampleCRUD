@@ -4,20 +4,16 @@ import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*
-import io.ktor.http.*
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.internal.decodeStringToJsonTree
-import org.mindrot.jbcrypt.BCrypt
 import sample.models.*
 import sample.config.DBConfig
 import sample.models.getUsers
-import java.sql.ResultSet
 import sample.Queries.*
 import sample.validation.passwordHash
-import java.net.http.HttpResponse
 
 class userController {
 
+    // API to API
     suspend fun test() : List<getUsersTest>{
         val client = HttpClient(CIO)
 
@@ -27,6 +23,8 @@ class userController {
 
         return userclient
     }
+
+    // to get all data from database
     fun getUserData(): MutableList<getUsers>{
         val data = mutableListOf<getUsers>()
         val query = DBConfig().connect().prepareStatement(readUserQuery)
@@ -50,6 +48,7 @@ class userController {
         return data
     }
 
+    // insert data to database
     fun createUser (userId: Int, userEmail: String, userPassword: String, userFullName: String, userPhone: String, userAddress: String ){
         val accountQuery = DBConfig().connect().prepareStatement(createUserAccountQuery)
         val credentialQuery = DBConfig().connect().prepareStatement(createUserCredentialQuery)
@@ -68,28 +67,32 @@ class userController {
         accountQuery.executeUpdate()
     }
 
-    fun userDelete(id: Int): ResultSet? {
+    // delete data to database
+    fun userDelete(id: Int): Int {
         val query = DBConfig().connect().prepareStatement(deleteUserQuery)
         // set id from userDelete params to deleteUserQuery
         query.setInt(1, id)
+        query.setInt(2, id)
 
         // the query is executed and results are fetched
-        return query.executeQuery()
+        return query.executeUpdate()
     }
 
-    fun userUpdate(fullname: String, userAddress: String, userName: String, userPassword: String, userID: Int) :ResultSet? {
+    fun userUpdate(Email: String, Password: String, fullName: String, Phone: String, Address: String, id: Int) : Int{
         val query = DBConfig().connect().prepareStatement(updateUserQuery)
         // set fullname from userUpdate params to updateUserQuery
-        query.setString(1, fullname)
+        query.setString(1, Email)
         // set username from userUpdate params to updateUserQuery
-        query.setString(2, userName)
+        query.setString(2, passwordHash(Password))
+        query.setInt(3,id)
         // set password from userUpdate params to updateUserQuery
-        query.setString(3, passwordHash(userPassword))
+        query.setString(4, fullName)
         // set address from userUpdate params to updateUserQuery
-        query.setString(4, userAddress)
-        query.setInt(5, userID)
+        query.setString(5, Phone)
+        query.setString(6, Address)
+        query.setInt(7,id)
 
         // the query is executed and results are fetched
-        return query.executeQuery()
+        return query.executeUpdate()
     }
 }

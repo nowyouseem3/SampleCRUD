@@ -5,8 +5,8 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 import sample.config.*
 
-fun userPutNameValidation (userName: String, userID: Int,fullName: String) :Boolean{
-    val regex = "^[A-Za-z]\\w{3,29}$"
+fun userPutNameValidation (userEmail: String, userID: Int,fullName: String) :Boolean{
+    val regex = "^[A-Za-z]\\w+.*\\w{3,29}$"
     val query = DBConfig().connect().prepareStatement(readUserUpdateQuery)
     query.setInt(1, userID)
     val result = query.executeQuery()
@@ -16,18 +16,15 @@ fun userPutNameValidation (userName: String, userID: Int,fullName: String) :Bool
     // If the username is empty and already in DB
     // return false
     while (result.next()) {
-        val username = result.getString("username")
-        val fullname = result.getString("fullname")
-
-        if (userName == username || fullName.length < 3 || fullName == fullname) {
-            return false
-        }
+        val useremail = result.getString("useremail")
+        val fullname = result.getString("userfullname")
+        if (userEmail == useremail || userEmail.length < 3|| fullName == fullname) return false
     }
 
     // Pattern class contains matcher() method
     // to find matching between given username
     // and regular expression.
-    val match : Matcher = userPattern.matcher(userName)
+    val match : Matcher = userPattern.matcher(fullName)
 
     // Return if the username
     // matched the ReGex

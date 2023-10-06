@@ -10,5 +10,6 @@ fun Application.configureRouting() {
         userRouting()
         homeRouting()
         fileRouting()
+        nestedRouting()
     }
 }

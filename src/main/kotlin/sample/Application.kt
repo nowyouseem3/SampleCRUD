@@ -8,9 +8,9 @@ import sample.plugins.*
 
 fun main() {
     embeddedServer(Netty, port = 8080, host = "0.0.0.0"){
-        configureSerialization()
-        configureRouting()
+        module()
     }.start(wait = true)
+
 }
 
 fun Application.module() {

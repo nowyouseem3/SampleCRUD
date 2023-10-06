@@ -15,7 +15,9 @@ fun Application.configureSerialization() {
     }
     install(Authentication){
         jwt {
-
+            val domain = "https://localhost/"
+            val audience = "jwt-audience"
+            realm = "acupoftea"
         }
     }
 }

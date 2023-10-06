@@ -14,7 +14,7 @@ fun passwordHash(password: String) :String {
 }
 fun userValidation (userEmail: String, fullName: String, password: String) : Boolean {
     // regex is declared variable to check if the user data meet the requirements
-    val regex = "^[A-Za-z]\\w{3,29}$"
+    val regex = "^[A-Za-z]\\w+.*\\w{1,29}$"
 
     //getting all information from DB to validate if the input Data has similar to usersDB
     val query = DBConfig().connect().prepareStatement(readUserQuery)
@@ -29,14 +29,9 @@ fun userValidation (userEmail: String, fullName: String, password: String) : Boo
         // username,fullname are declared variable to store the said items in every single loop
         val useremail = result.getString("useremail")
         val fullname = result.getString("userfullname")
-
         //validation
-        if (userEmail == null || fullName == null || password == null ||
-            userEmail == useremail || fullName == fullname ||
-            fullName.length < 3 || password.length < 3) {
-
-            return false
-        }
+        if (userEmail == useremail || fullName == fullname ||
+            password.length < 3 || userEmail.length < 3) return false
     }
 
     // Pattern class contains matcher() method
